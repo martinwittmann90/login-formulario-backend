@@ -2,39 +2,24 @@ import express from 'express';
 import MongoDBProducts from "../services/dbproducts.service.js"
 import ProductModel from '../DAO/models/product.model.js';
 import MongoDBCarts from "../services/dbcarts.service.js";
-
+import { isUser } from "../middleware/auth.js";
 
 const dbCarts = new MongoDBCarts();
 const newProductManager = new MongoDBProducts;
 const viewsRouter = express.Router();
 
-viewsRouter.get('/', async (req, res)=> {
-    try{
-        const { page, limit, sort, query}= req.query;
-        const queryResult = await newProductManager.getAllProducts(page, limit, sort, query);
-        const {docs, ...paginationInfo} = queryResult;
-        const productsVisualice = docs.map((product) => {
-            return {
-                _id: product._id.toString(),
-                title: product.title,
-                description: product.description,
-                price: product.price,
-                thumbnail: product.thumbnail,
-                code: product.code,
-                stock: product.stock,
-                category: product.category                
-            }
-        });
-
-        const nextPage = parseInt(page)+1;
-        const nextPageUrl = `/?page=${nextPage}&limit=${limit}&sort=${sort}`;
-        res.render('home', {productsVisualice, paginationInfo, nextPageUrl, sort});
-    } catch(error) {
-        console.log(error)
-    }
+viewsRouter.get("/", async (req, res) => {
+  const { register, login } = req.query;
+  const session = req.session;
+  if (register === 'true' && !session.user)
+      return res.render("register");
+  if (login === 'true' && !session.user)
+      return res.render("login");
+  const context = { session: session.user };
+  res.render("home", context);
 });
 
-viewsRouter.get('/products', async (req, res)=> {
+viewsRouter.get('/products', isUser, async (req, res)=> {
     try{
         const { page, limit, sort, query }= req.query;
         const queryResult = await newProductManager.getAllProducts(page, limit, sort, query);

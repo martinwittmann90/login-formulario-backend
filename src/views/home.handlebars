@@ -1,59 +1,23 @@
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item">
-      <img src="https://i.ibb.co/nrNMjtT/logo.png" wh2idth="70" style="max-height: max-content;"/>
-        <div>
-          {{#if session}}
-            <h2>Welcome, {{session.firstName}}</h2>
-            <h2>Perfil</h2>
+<nav>
+    <div class="dashboard-container">
+        <img src="https://i.ibb.co/nrNMjtT/logo.png" whidth="70" style="max-height: max-content;"/>
+        {{#if session}}
+        <p class="welcome-message">Welcome, {{session.firstName}}</p>
+        <h2 class="profile-title">Perfil</h2>
+        <div class="profile-details">
             <div>
-                <div>
-                    <p>Email: {{session.email}}</p>
-                    <p>Full name: {{session.firstName}} {{session.lastName}}</p>
-                    <p>Role: {{session.role}}</p>
-                </div>
+                <p>Email: {{session.email}}</p>
+                <p>Full name: {{session.firstName}} {{session.lastName}}</p>
+                <p>Age: {{session.age}}</p>
+                <p>Role: {{session.role}}</p>
             </div>
-            <button id="logout-btn" type="submit" class="button is-light">Logout</button>
-            {{else}}
-              <p>Bienvenido</p> 
-              <a href="auth/login" class="button is-light">Log in</a> 
-              <a href="auth/register" class="button is-primary"><strong>Sign up</strong></a>
-          {{/if}}
-      </div>
-  </div>
-</nav>
-<section>
-
-<h1 class="title__productspage">LISTADO DE PRODUCTOS</h1>
-<div class="row product justify-content-evenly">
-    {{#each productsVisualice}}
-    <div class="containerCard containerProd" style="width: 14rem; margin-top: 5px;">
-        <div style="margin-top: 10px; width:200px; height:200px;">
-            <img src={{this.thumbnail}} alt="foto de Product {{this.id}}">
         </div>
-        <div class="card-body">
-            <h3 class="card-title">{{this.title}}</h3>
-            <p class="card-text">{{this.description}}</p>
-            <p class="card-text">$ {{this.price}}</p>
-        </div>
+        <button id="logout-btn" type="submit" class="logout-btn">Logout</button>
+        {{else}}
+            <p class="guest-message">Welcome, Guest.</p>
+            <a href="/?login=true" class="sign-in-link button is-light">SIGN IN</a>
+            <a href="/?register=true" class="register-link button is-primary">REGISTER</a>
+        {{/if}}
     </div>
-    {{/each}}
-</div>
-  <div style="display: flex; justify-content: space-between; padding: 30px">
-      <div> ORDENAR POR PRECIO
-        <a href="?page={{paginationInfo.page}}&limit={{paginationInfo.limit}}&sort=asc">⬆️</a>
-        <a href="?page={{paginationInfo.page}}&limit={{paginationInfo.limit}}&sort=desc">⬇️</a>
-      </div>
-  </div>
-<div style="display: flex; justify-content: center; margin-top: 30px">
-  <div class="pagination">
-    {{#if paginationInfo.hasPrevPage}}
-    <a href="?page={{paginationInfo.prevPage}}&limit={{paginationInfo.limit}}&sort={{sort}}"> Anterior</a>
-    {{/if}}
-    <span style="margin-left: 20px; margin-right: 20px">Página {{paginationInfo.page}} de {{paginationInfo.totalPages}}</span>
-    {{#if paginationInfo.hasNextPage}}
-    <a href="?page={{paginationInfo.nextPage}}&limit={{paginationInfo.limit}}&sort={{sort}}">Siguiente ➡️</a>
-    {{/if}}
-  </div>
-</div>
-</section>
+</nav>
+<script src="/js/profileController.js"></script>

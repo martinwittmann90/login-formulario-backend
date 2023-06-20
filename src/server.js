@@ -10,7 +10,7 @@ import viewsRouter from "./routes/view.routes.js";
 import productsRouter from "./routes/products.routes.js";
 import cartsRouter from "./routes/carts.routes.js";
 import chatRouter from "./routes/chat.routes.js"
-import authRouter from "./routes/auth.routes.js"
+import sessionsRouter from "./routes/sessions.routes.js";
 import websockets from "./websockets/websockets.js";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -67,7 +67,7 @@ app.use('/products', viewsRouter);
 app.use("/chat", chatRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
-app.use('/auth', authRouter);
+app.use("/api/sessions", sessionsRouter);
 app.get('/*', async (req, res) => {
   return res.status(404).json({ status: 'error', message: 'incorrect route' })
 })

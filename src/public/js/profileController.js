@@ -1,39 +1,31 @@
 const logoutBtn = document.getElementById("logout-btn");
 
 logoutBtn.onclick = async () => {
-    try {
-      const loadingAlert = Swal.fire({
-        title: "Loading...",
-        allowOutsideClick: false,
-        showConfirmButton: false,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
-      localStorage.removeItem("cartID");
-      await fetch("api/sessions/logout");
-      loadingAlert.close();
-      Swal.fire({
-        icon: "success",
-        title: "Redirecting to login page...",
-        timer: 2500,
-        allowOutsideClick: false,
-        timerProgressBar: true,
-        text: "You have been logged out!",
-        didOpen: () => {
-          Swal.showLoading();
-        },
-        willClose: () => {
-          // Redirect to Login Page
-          window.location.href = "/?login=true";
-        },
-      });
-    } catch (error) {
-      loadingAlert.close();
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Something went wrong!",
-      });
-    }
-  };
+  try {
+    const loadingElement = document.createElement("div");
+    loadingElement.textContent = "Loading...";
+    document.body.appendChild(loadingElement);
+
+    localStorage.removeItem("cartID");
+    await fetch("/api/sessions/logout");
+
+    document.body.removeChild(loadingElement);
+
+    const successElement = document.createElement("div");
+    successElement.textContent = "Redirecting to login page...";
+    document.body.appendChild(successElement);
+
+    setTimeout(() => {
+      document.body.removeChild(successElement);
+      window.location.href = "/?login=true";
+    }, 2500);
+  } catch (error) {
+    const errorElement = document.createElement("div");
+    errorElement.textContent = "Oops... Something went wrong!";
+    document.body.appendChild(errorElement);
+
+    setTimeout(() => {
+      document.body.removeChild(errorElement);
+    }, 2500);
+  }
+};

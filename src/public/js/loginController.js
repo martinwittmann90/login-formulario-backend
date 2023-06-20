@@ -3,15 +3,12 @@ loginForm.onsubmit = (e) => {
   e.preventDefault();
   const formData = new FormData(loginForm);
   const formValues = Object.fromEntries(formData.entries());
-  const loadingAlert = Swal.fire({
-    title: "Loading...",
-    allowOutsideClick: false,
-    showConfirmButton: false,
-    didOpen: () => {
-      Swal.showLoading();
-    },
-  });
-  fetch("api/sessions/login", {
+
+  const loadingElement = document.createElement("div");
+  loadingElement.textContent = "Loading...";
+  document.body.appendChild(loadingElement);
+
+  fetch("/api/sessions/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -20,37 +17,32 @@ loginForm.onsubmit = (e) => {
   })
     .then((response) => response.json())
     .then((result) => {
-      loadingAlert.close();
+      document.body.removeChild(loadingElement);
       loginForm.reset();
       if (result.status === "success") {
-        Swal.fire({
-          icon: "success",
-          timer: 2500,
-          title: "Redirecting to Products Page...",
-          text: "Login successful!",
-          allowOutsideClick: false,
-          timerProgressBar: true,
-          didOpen: () => {
-            Swal.showLoading();
-          },
-          willClose: () => {
-            window.location.href = "/products";
-          },
-        });
+        const successElement = document.createElement("div");
+        successElement.textContent = "Redirecting to Products Page...";
+        document.body.appendChild(successElement);
+        setTimeout(() => {
+          document.body.removeChild(successElement);
+          window.location.href = "/products";
+        }, 2500);
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Invalid username or password",
-        });
+        const errorElement = document.createElement("div");
+        errorElement.textContent = "Invalid username or password";
+        document.body.appendChild(errorElement);
+        setTimeout(() => {
+          document.body.removeChild(errorElement);
+        }, 2500);
       }
     })
     .catch((error) => {
-      loadingAlert.close();
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Something went wrong!",
-      });
+      document.body.removeChild(loadingElement);
+      const errorElement = document.createElement("div");
+      errorElement.textContent = "Oops... Something went wrong!";
+      document.body.appendChild(errorElement);
+      setTimeout(() => {
+        document.body.removeChild(errorElement);
+      }, 2500);
     });
 };

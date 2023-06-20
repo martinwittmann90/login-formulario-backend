@@ -4,15 +4,12 @@ form.onsubmit = (e) => {
   e.preventDefault();
   const formData = new FormData(form);
   const formValues = Object.fromEntries(formData.entries());
-  const loadingAlert = Swal.fire({
-    title: "Loading...",
-    allowOutsideClick: false,
-    showConfirmButton: false,
-    didOpen: () => {
-      Swal.showLoading();
-    },
-  });
-  fetch("api/sessions/register", {
+  
+  const loadingElement = document.createElement("div");
+  loadingElement.textContent = "Loading...";
+  document.body.appendChild(loadingElement);
+
+  fetch("/api/sessions/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -20,29 +17,23 @@ form.onsubmit = (e) => {
     body: JSON.stringify(formValues),
   })
     .then(() => {
-      loadingAlert.close();
+      document.body.removeChild(loadingElement);
       form.reset();
-      Swal.fire({
-        icon: "success",
-        timer: 2500,
-        title: "Redirecting to Login Page...",
-        text: "User created!",
-        allowOutsideClick: false,
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-        willClose: () => {
-          window.location.href = "/?login=true";
-        },
-      });
+      const successElement = document.createElement("div");
+      successElement.textContent = "Redirecting to Login Page...";
+      document.body.appendChild(successElement);
+      setTimeout(() => {
+        document.body.removeChild(successElement);
+        window.location.href ="/?login=true";
+      }, 2500);
     })
     .catch((error) => {
-      loadingAlert.close();
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Something went wrong!",
-      });
+      document.body.removeChild(loadingElement);
+      const errorElement = document.createElement("div");
+      errorElement.textContent = "Oops... Something went wrong!";
+      document.body.appendChild(errorElement);
+      setTimeout(() => {
+        document.body.removeChild(errorElement);
+      }, 2500);
     });
 };
