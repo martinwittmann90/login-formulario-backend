@@ -56,7 +56,6 @@ viewsRouter.get('/products', isUser, async (req, res)=> {
         }
         const nextPageUrl = `/?page=${nextPage}&limit=${limit}&sort=${sort}`;
         res.render('products', {productsVisualice, paginationInfo, nextPageUrl, sort, query})
-        console.log(response);
     } catch(error) {
         console.error(error);
         return res.status(400).json({

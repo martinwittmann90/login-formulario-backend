@@ -54,3 +54,4 @@ formProducts.addEventListener("submit", (event) => {
     cardContainer.appendChild(newCard);
     window.location.reload();
 });
+
