@@ -55,7 +55,16 @@ viewsRouter.get('/products', isUser, async (req, res)=> {
             throw new Error('La página solicitada no existe');
         }
         const nextPageUrl = `/?page=${nextPage}&limit=${limit}&sort=${sort}`;
-        res.render('products', {productsVisualice, paginationInfo, nextPageUrl, sort, query})
+        const productsContext = {
+          session: req.session.user,
+          productsVisualice: productsVisualice,
+          paginationInfo: paginationInfo,
+          nextPageUrl: nextPageUrl,
+          sort: sort,
+          query: query
+      };
+      res.render('products', productsContext);
+      /* res.render('products', {productsVisualice, paginationInfo, nextPageUrl, sort, query}) */
     } catch(error) {
         console.error(error);
         return res.status(400).json({

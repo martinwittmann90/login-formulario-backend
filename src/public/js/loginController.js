@@ -3,7 +3,6 @@ loginForm.onsubmit = (e) => {
   e.preventDefault();
   const formData = new FormData(loginForm);
   const formValues = Object.fromEntries(formData.entries());
-
   const loadingElement = document.createElement("div");
   loadingElement.textContent = "Loading...";
   document.body.appendChild(loadingElement);
