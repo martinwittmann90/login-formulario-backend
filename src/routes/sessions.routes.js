@@ -1,5 +1,6 @@
 import express from 'express';
 import UserService from "../services/dbuser.service.js";
+import { isUser, isAdmin } from "../middleware/auth.js"
 const usersService = new UserService();
 
 const sessionsRouter = express.Router();
@@ -15,8 +16,16 @@ sessionsRouter.post("/login", async (req, res) => {
     if (response.code === 200) {
         req.session.user = response.result.payload;
     }
+/*     const isAdmin = email === 'adminCoder@coder.com' && password === 'adminCod3r123';
+    if (isAdmin) {
+        req.session.email = email;
+        req.session.isAdmin = true;
+        return res.redirect('home');
+    }
+ */
     return res.status(response.code).json(response.result);
 });
+
 sessionsRouter.get("/logout", async (req, res) => {
     req.session.destroy((err) => {
         if (err) {
@@ -26,22 +35,9 @@ sessionsRouter.get("/logout", async (req, res) => {
         return res.status(200).json({ message: "Logout succesfully!" });
     });
 });
+
+/* sessionsRouter.get('/administration', isUser, isAdmin, (req, res) => {
+    return res.send('Data');
+}); */
+
 export default sessionsRouter;
-
-
-/* authRouter.post('/register', async (req, res) => {
-    const {email, password, firstName, lastName} = req.body;
-    if (!email || !password || !firstName || !lastName) {
-        return res.status(400).render('error', {error: 'Missing fields'});
-    }
-    const isAdmin = email === 'adminCoder@coder.com' && password === 'adminCod3r123';
-    try {
-        await UserModel.create({email: email, password: password, firstName: firstName, lastName: lastName, isAdmin: isAdmin});
-        req.session.email = email;
-        req.session.isAdmin = isAdmin;
-
-        return res.redirect('/auth/profile');
-    } catch (e) {
-        console.log(e);
-        return res.status(400).render('error', { error: 'User could not be created. Try another email'});
-    } */
